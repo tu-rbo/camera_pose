@@ -48,7 +48,7 @@ if msg_class is None:
 # disable /rosout and /rostime as this causes blips in the pubsub network due to rostopic pub often exiting quickly
 rospy.init_node("msg_saver", disable_rosout=True, disable_rostime=True)
 
-pub = rospy.Publisher(topic_name, msg_class, latch=True)
+pub = rospy.Publisher(topic_name, msg_class, latch=True, queue_size=9999999)
 
 # Get the last message on the topic of interest
 
@@ -68,6 +68,6 @@ if bag_filename:
         print "Couldn't find file [%s]. Skipping publishing" % bag_filename
 
 # Listen on the same topic, so that we can update the bag
-sub = rospy.Subscriber(topic_name, msg_class, callback)
+sub = rospy.Subscriber(topic_name, msg_class, callback, queue_size=100000)
 
 rospy.spin()
